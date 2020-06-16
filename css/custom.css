@@ -1,0 +1,28 @@
+.calculator {
+    padding: 40px 15px;
+    max-width: 600px;
+    margin: 40px auto;
+    border: 2px solid black;
+    border-radius: 20px;
+}
+h1 {
+    text-align: center;
+}
+.grid-calculator {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    padding-top: 20px;
+}
+.grid-calculator > :first-child {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+.grid-calculator > :first-child > button {
+    background-color: #3C4043;
+    color: white;
+    height: 100%;
+}
+.grid-calculator > :last-child > button {
+    background-color: #5F6267;
+    color: white;
+}
