@@ -4,30 +4,41 @@ text = document.getElementById("text-retorno");
 // função que pega o valor dos numeros
 function numbers(number) {
     if (number === '=') {
-        switch (operation) {
-            case 'del':
-                console.log("numero deletado")
-            break;
-            case '/':
-                result =  number1 / number2;
-                text.innerHTML = `${number1} ${operation} ${number2} = ${result}`;
-            break;
-            case '*':
-                result =  number1 * number2;
-                text.innerHTML = `${number1} ${operation} ${number2} = ${result}`;
-            break;
-            case '-':
-                result =  number1 - number2;
-                text.innerHTML = `${number1} ${operation} ${number2} = ${result}`;
-            break;
-            case '+':
-                result = Number(number1) + Number(number2);
-                text.innerHTML = `${number1} ${operation} ${number2} = ${result}`;
-            break;
-            default: 
-                console.log("ainda não tem uma conta formada");
+        if (number1 !== undefined && number2 !== undefined) {
+            switch (operation) {
+                case '/':
+                    result =  number1 / number2;
+                    text.innerHTML = `${number1} ${operation} ${number2} = ${result}`;
+                break;
+                case '*':
+                    result =  number1 * number2;
+                    text.innerHTML = `${number1} ${operation} ${number2} = ${result}`;
+                break;
+                case '-':
+                    result =  number1 - number2;
+                    text.innerHTML = `${number1} ${operation} ${number2} = ${result}`;
+                break;
+                case '+':
+                    result = Number(number1) + Number(number2);
+                    text.innerHTML = `${number1} ${operation} ${number2} = ${result}`;
+                break;
+                default: 
+                    text.innerHTML = '';
+            }
+            position = 2;
         }
-        position = 2;
+    } else if (number == 'del') {
+        if (position === 0) {
+            if (number1 !== undefined) {
+                number1 = number1.slice(0, -1);
+                text.innerHTML = `${number1}`;
+            } 
+        } else if (position === 1) {
+            if (number2 !== undefined) {
+                number2 = number2.slice(0, -1);
+                text.innerHTML = `${number1} ${operation} ${number2}`;
+            } 
+        }
     } else if (position === 0) {
         if (number1 === undefined) {
             number1 = number;
@@ -43,8 +54,18 @@ function numbers(number) {
         }
         text.innerHTML = `${number1} ${operation} ${number2}`;
     } else if(number === '.') {
-        if (number1 === undefined) {
-            
+        if (position === 0) {
+            if (number1 === undefined) {
+                number1 = '0.'
+            } else {
+                number1 += '.'
+            }
+        } else if (position === 1) {
+            if (number2 === undefined) {
+                number2 = '0.'
+            } else {
+                number2 += '.'
+            }
         }
     } else {
         number1 = undefined;
@@ -57,14 +78,10 @@ function numbers(number) {
 // função que pega o valor das operações
 function operations (oper) {
     if (number1 !== undefined) {
-        if (this.name === 'del') {
-            console.log("O DELETE FOI ACIONADO");
-        } else {
-            operation = oper;
-            position = 1;
-            text.innerHTML = `${number1} ${operation}`;
-            number2 = undefined;
-        }
+        operation = oper;
+        position = 1;
+        text.innerHTML = `${number1} ${operation}`;
+        number2 = undefined;
     }   
 }
 
@@ -78,26 +95,41 @@ document.querySelectorAll(".btn-numbers").forEach(item => {
 //percorre todos as operações e aciona o evento quando uma e clicado
 document.querySelectorAll(".btn-operations").forEach(item => {
     item.addEventListener("click", function() {
-        operations(this.name);
+        if (this.name == 'del') {
+            if (position === 2) {
+                text.innerHTML = '';
+                operation = undefined;
+            } else {
+                numbers(this.name);
+            }
+        } else {
+            operations(this.name);
+        }
     });
 });
 
 function tecla(){
     let evt = event.keyCode;
     let value = event.key;
-    console.log("O código da tecla pressionada foi: " + evt);
-    if ((evt >= 96 && evt <= 105) || (evt >= 48 && evt <= 57) || evt == 187 || evt == 13 || evt == 188 || evt == 110) {
+    if ((evt >= 96 && evt <= 105) || (evt >= 48 && evt <= 57) || value == '=' || evt == 13 || evt == 188 || evt == 110) {
         if (evt == 13) {
             numbers('=');
         } else if (evt == 188 || evt == 110) {
             numbers('.');
+        } else if (evt == 56 && value == '*') {
+            operations(value);
         } else {
             numbers(value);
         }
-    } else if (evt == 106 || evt == 107 || evt == 109 || evt == 111) {
+    } else if (value == '+' || value == '-' || value == '*' || value == '/') {
         operations(value);
     } else if (evt == 8){
-        console.log("O DELETE FOI digitado");
+        if (position === 2) {
+            text.innerHTML = '';
+            operation = undefined;
+        } else {
+            numbers('del');
+        }
     }
 }
   
