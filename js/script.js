@@ -42,6 +42,10 @@ function numbers(number) {
             number2 += number;
         }
         text.innerHTML = `${number1} ${operation} ${number2}`;
+    } else if(number === '.') {
+        if (number1 === undefined) {
+            
+        }
     } else {
         number1 = undefined;
         number2 = undefined;
@@ -82,10 +86,18 @@ function tecla(){
     let evt = event.keyCode;
     let value = event.key;
     console.log("O código da tecla pressionada foi: " + evt);
-    if ((evt >= 96 && evt <= 105) || (evt >= 48 && evt <= 57)) {
-        numbers(value);
+    if ((evt >= 96 && evt <= 105) || (evt >= 48 && evt <= 57) || evt == 187 || evt == 13 || evt == 188 || evt == 110) {
+        if (evt == 13) {
+            numbers('=');
+        } else if (evt == 188 || evt == 110) {
+            numbers('.');
+        } else {
+            numbers(value);
+        }
     } else if (evt == 106 || evt == 107 || evt == 109 || evt == 111) {
         operations(value);
+    } else if (evt == 8){
+        console.log("O DELETE FOI digitado");
     }
 }
   
